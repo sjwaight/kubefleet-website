@@ -61,6 +61,7 @@ If you see that the cluster is still in an unknown state, it might be that the m
 Alternatively, if you would like to find out the exact steps the script performs, or if you feel like fine-tuning some of the steps, you may join a cluster manually to your fleet with the instructions below:
 
 <details>
+
 <summary>Joining a member cluster manually</summary>
 
 1. Make sure that you have installed `kubectl`, `helm`, `curl`, `jq`, and `base64` in your
@@ -69,14 +70,14 @@ system.
 2. Create a Kubernetes service account in your hub cluster:
 
     ```sh
-    # Replace the value of HUB_CLUSTER_CONTEXT with the name of the kubeconfig
+    # Replace YOUR-HUB-CLUSTER-CONTEXT with the name of the kubeconfig
     # context you use for accessing your hub cluster.
     export HUB_CLUSTER_CONTEXT="YOUR-HUB-CLUSTER-CONTEXT"
-    # Replace the value of MEMBER_CLUSTER with a name you would like to assign to the new
-    # member cluster.
-    #
-    # Note that the value of MEMBER_CLUSTER_NAME will be used as the name the member cluster registers
-    # with the hub cluster.
+
+    # Replace YOUR-MEMBER-CLUSTER with a name you would like 
+    # to assign to the new member cluster.    
+    # Note that the value of MEMBER_CLUSTER_NAME will be used as 
+    # the name the member cluster registers with the hub cluster.
     export MEMBER_CLUSTER_NAME="YOUR-MEMBER-CLUSTER"
 
     export SERVICE_ACCOUNT="$MEMBER_CLUSTER_NAME-hub-cluster-access"
@@ -140,11 +141,11 @@ system.
     ```sh
     # Install the member agent helm chart on the member cluster.
 
-    # Replace the value of MEMBER_CLUSTER_CONTEXT with the name of the kubeconfig context you use
+    # Replace YOUR-MEMBER-CLUSTER-CONTEXT with the name of the kubeconfig context you use
     # for member cluster access.
     export MEMBER_CLUSTER_CONTEXT="YOUR-MEMBER-CLUSTER-CONTEXT"
 
-    # Replace the value of HUB_CLUSTER_ADDRESS with the address of the hub cluster API server.
+    # Replace YOUR-HUB-CLUSTER-ADDRESS with the address of the hub cluster API server.
     export HUB_CLUSTER_ADDRESS="YOUR-HUB-CLUSTER-ADDRESS"
 
     # Extract the hub cluster CA for secure TLS verification.
@@ -170,7 +171,7 @@ system.
       --namespace fleet-system \
       --create-namespace 
 
-    # Enabled Beta APIs by adding argument --set enableV1Beta1APIs=true
+    # Enable Beta APIs by adding argument --set enableV1Beta1APIs=true
     ```
 
 6. Verify that the installation of the member agent is successful on the member cluster:
@@ -187,6 +188,7 @@ system.
     kubectl config use-context $HUB_CLUSTER_CONTEXT
     kubectl get membercluster $MEMBER_CLUSTER_NAME
     ```
+
 </details>
 
 ## Remove a cluster from a fleet
@@ -194,10 +196,10 @@ system.
 KubeFleet uses the `MemberCluster` resource to manage cluster memberships. To remove a member cluster from a fleet, delete the corresponding `MemberCluster` resource from the hub cluster:
 
 ```sh
-# Replace the value of MEMBER-CLUSTER with the name of the member cluster you would like to
-# remove from a fleet.
-export MEMBER_CLUSTER=YOUR-MEMBER-CLUSTER
-kubectl delete membercluster $MEMBER_CLUSTER
+# Replace YOUR-MEMBER-CLUSTER with the name of the
+# member cluster you would like to remove from a fleet.
+export MEMBER_CLUSTER_NAME=YOUR-MEMBER-CLUSTER
+kubectl delete membercluster $MEMBER_CLUSTER_NAME
 ```
 
 It may take a while before the member cluster leaves the fleet successfully. KubeFleet will perform some cleanup and all resources placed onto the cluster by KubeFleet will be removed.
@@ -205,8 +207,8 @@ It may take a while before the member cluster leaves the fleet successfully. Kub
 After the member cluster leaves, you can remove the member agent installation from the cluster using Helm:
 
 ```sh
-# Replace the value of MEMBER_CLUSTER_CONTEXT with the name of the kubeconfig context you use
-# for member cluster access.
+# Replace YOUR-MEMBER-CLUSTER-CONTEXT with the name of the
+# kubeconfig context you use for member cluster access.
 export MEMBER_CLUSTER_CONTEXT=YOUR-MEMBER-CLUSTER-CONTEXT
 kubectl config use-context $MEMBER_CLUSTER_CONTEXT
 helm uninstall member-agent
@@ -219,10 +221,10 @@ It may take a few moments before the uninstallation completes.
 You can use `MemberCluster` on the hub cluster to view the status of a member cluster:
 
 ```sh
-# Replace the value of MEMBER-CLUSTER with the name of the member cluster of which you would like
-# to view the status.
-export MEMBER_CLUSTER=YOUR-MEMBER-CLUSTER
-kubectl get membercluster $MEMBER_CLUSTER -o jsonpath="{.status}"
+# Replace YOUR-MEMBER-CLUSTER with the name of the member 
+# cluster of which you would like to view the status.
+export MEMBER_CLUSTER_NAME=YOUR-MEMBER-CLUSTER
+kubectl get membercluster $MEMBER_CLUSTER_NAME -o jsonpath="{.status}"
 ```
 
 The status consists of:
@@ -248,9 +250,9 @@ The status consists of:
 You can add labels to a `MemberCluster` resource in the same as with any other Kubernetes resource. These labels can then be used for targeting specific clusters in resource placement. To add a label, run the command below on the hub cluster:
 
 ```sh
-# Replace the values of MEMBER_CLUSTER, LABEL_KEY, and LABEL_VALUE with those of your own.
-export MEMBER_CLUSTER=YOUR-MEMBER-CLUSTER
+# Replace the values of MEMBER_CLUSTER_NAME, LABEL_KEY, and LABEL_VALUE with those of your own.
+export MEMBER_CLUSTER_NAME=YOUR-MEMBER-CLUSTER
 export LABEL_KEY=YOUR-LABEL-KEY
 export LABEL_VALUE=YOUR-LABEL-VALUE
-kubectl label membercluster $MEMBER_CLUSTER $LABEL_KEY=$LABEL_VALUE
+kubectl label membercluster $MEMBER_CLUSTER_NAME $LABEL_KEY=$LABEL_VALUE
 ```
