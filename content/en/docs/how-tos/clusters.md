@@ -94,7 +94,7 @@ system.
 3. Create a Kubernetes secret of the service account token type, which the member cluster will use to access the hub cluster.
 
     ```sh
-    export SERVICE_ACCOUNT_SECRET="$MEMBER_CLUSTER-hub-cluster-access-token"
+    export SERVICE_ACCOUNT_SECRET="$MEMBER_CLUSTER_NAME-hub-cluster-access-token"
     cat <<EOF | kubectl apply -f -
     apiVersion: v1
     kind: Secret
@@ -144,9 +144,6 @@ system.
     # Replace YOUR-MEMBER-CLUSTER-CONTEXT with the name of the kubeconfig context you use
     # for member cluster access.
     export MEMBER_CLUSTER_CONTEXT="YOUR-MEMBER-CLUSTER-CONTEXT"
-
-    # Replace YOUR-HUB-CLUSTER-ADDRESS with the address of the hub cluster API server.
-    export HUB_CLUSTER_ADDRESS="YOUR-HUB-CLUSTER-ADDRESS"
 
     # Extract the hub cluster CA for secure TLS verification.
     # Run this while connected to the hub cluster context:
